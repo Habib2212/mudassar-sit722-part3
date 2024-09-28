@@ -1,1 +1,82 @@
-# Your Solution
+# Deployment for book-catalog
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-catalog-deployment
+  labels:
+    app: book-catalog
+spec:
+  replicas: 2  # Number of pod replicas
+  selector:
+    matchLabels:
+      app: book-catalog
+  template:
+    metadata:
+      labels:
+        app: book-catalog
+    spec:
+      containers:
+        - name: book-catalog
+          image: bookresourceaks.azurecr.io/book-catalog:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DATABASE_URL  # Environment variable for the database connection
+              value: "postgresql://mudassar_sit722_part3_user:gr2F32IrESvncwp8Na7MOpIwqd0qz8fR@dpg-crs09n0gph6c738n26g0-a.oregon-postgres.render.com/mudassar_sit722_part3"  # Replace with actual DB connection string
+
+---
+# Service for book-catalog
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-catalog-service
+spec:
+  selector:
+    app: book-catalog
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000  # Port exposed by the container
+  type: LoadBalancer  # Expose the service externally
+
+---
+# Deployment for inventory-management
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-management-deployment
+  labels:
+    app: inventory-management
+spec:
+  replicas: 2  # Number of pod replicas
+  selector:
+    matchLabels:
+      app: inventory-management
+  template:
+    metadata:
+      labels:
+        app: inventory-management
+    spec:
+      containers:
+        - name: inventory-management
+          image: bookresourceaks.azurecr.io/inventory-management:latest
+          ports:
+            - containerPort: 8001
+          env:
+            - name: DATABASE_URL  # Environment variable for the database connection
+              value: "postgresql://mudassar_sit722_part3_user:gr2F32IrESvncwp8Na7MOpIwqd0qz8fR@dpg-crs09n0gph6c738n26g0-a.oregon-postgres.render.com/mudassar_sit722_part3"  # Replace with actual DB connection string
+
+---
+# Service for inventory-management
+apiVersion: v1
+kind: Service
+metadata:
+  name: inventory-management-service
+spec:
+  selector:
+    app: inventory-management
+  ports:
+    - protocol: TCP
+      port: 81
+      targetPort: 8001  # Port exposed by the container
+  type: LoadBalancer  # Expose the service externally

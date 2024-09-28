@@ -1,1 +1,29 @@
 # Your Solution
+version: '3.8'
+
+services:
+  # Book Catalog microservice
+  book_catalog:
+    build: ./book_catalog
+    container_name: book_catalog
+    ports:
+      - "8000:8000"
+    environment:
+      POSTGRES_HOST: dpg-crs09n0gph6c738n26g0-a
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: mudassar_sit722_part3_user
+      POSTGRES_PASSWORD: gr2F32IrESvncwp8Na7MOpIwqd0qz8fR
+      POSTGRES_DB: mudassar_sit722_part3
+
+  # Inventory Management microservice
+  inventory_management:
+    build: ./inventory_management
+    container_name: inventory_management
+    ports:
+      - "8001:8001"
+    environment:
+      POSTGRES_HOST: dpg-crs09n0gph6c738n26g0-a
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: mudassar_sit722_part3_user
+      POSTGRES_PASSWORD: gr2F32IrESvncwp8Na7MOpIwqd0qz8fR
+      POSTGRES_DB: mudassar_sit722_part3
